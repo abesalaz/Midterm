@@ -11,7 +11,8 @@ public class BadNoiseTrigger : MonoBehaviour
         {
 
             //
-            //PUT SOUND HERE
+            OSCHandler.Instance.SendMessageToClient("pd", "/unity/bad", 0);
+            flag = false;
             //
 
 

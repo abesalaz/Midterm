@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoinTrigger : MonoBehaviour
+public class FinishTrigger : MonoBehaviour
 {
+    [SerializeField] private Canvas endscreen;
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            gameObject.SetActive(false);
-            
+            endscreen.enabled = true;
             //
-            //SOUND GOES HERE
+            OSCHandler.Instance.SendMessageToClient("pd", "/unity/good", 0);
             //
 
 

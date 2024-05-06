@@ -11,11 +11,14 @@ public class BallController : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    private bool temp;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
+        OSCHandler.Instance.Init();
+        temp = true;
     }
 
     void Update()
@@ -29,10 +32,16 @@ public class BallController : MonoBehaviour
         // Move the ball based on camera direction
         Vector3 moveDirection = GetMoveDirection();
         rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+        
+        if(moveDirection != Vector3.zero && temp && isGrounded)
+        {
+            StartCoroutine(PlaySound());
+        }
 
         // Jump
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
+            OSCHandler.Instance.SendMessageToClient("pd", "/unity/jump", 0);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
@@ -49,5 +58,12 @@ public class BallController : MonoBehaviour
         moveDirection.Normalize(); // Normalize to avoid faster movement diagonally
 
         return moveDirection;
+    }
+    private IEnumerator PlaySound()
+    {
+        temp = false;
+        OSCHandler.Instance.SendMessageToClient("pd", "/unity/dig", 0);
+        yield return new WaitForSeconds(0.4f);
+        temp = true;
     }
 }
