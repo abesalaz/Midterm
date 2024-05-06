@@ -15,6 +15,7 @@ public class BallController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
